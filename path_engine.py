@@ -1,12 +1,3 @@
-# ==========================================
-# Path4 - Path Analysis Engine
-# Version 0.1
-# ==========================================
-
-# ערכי הקלפים האפשריים
-CARDS = ["7", "8", "9", "10", "J", "Q", "K", "A"]
-
-
 class Draw:
     def __init__(self, cards, draw_id=""):
         self.cards = cards
@@ -21,21 +12,47 @@ class PathEngine:
     def __init__(self):
         self.draws = []
 
-    def add_draw(self, cards, draw_id=""):
-        self.draws.append(Draw(cards, draw_id))
+    def load_draws(self, filename):
+        self.draws = []
+
+        with open(filename, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+
+                if line == "":
+                    continue
+
+                cards = line.split()
+
+                if len(cards) != 4:
+                    continue
+
+                self.draws.append(Draw(cards))
 
     def total_draws(self):
         return len(self.draws)
 
     def print_draws(self):
-        for draw in self.draws:
-            print(draw)
+        print("=== Draws ===")
+
+        for i, draw in enumerate(self.draws):
+            print(f"{i+1:02d}. {' '.join(draw.cards)}")
 
 
 if __name__ == "__main__":
 
     engine = PathEngine()
 
-    print("Path4 Engine Started")
-    print("--------------------")
-    print("Draws loaded:", engine.total_draws())
+    engine.load_draws("draws.txt")
+
+    print()
+
+    print("Path4 Engine")
+
+    print("----------------")
+
+    print(f"Draws loaded: {engine.total_draws()}")
+
+    print()
+
+    engine.print_draws()
